@@ -46,9 +46,9 @@ def load_user(user_id):
     #db.drop_all()
     #db.create_all()
 
-with app.app_context():
-    if not os.path.exists(os.path.join(basedir, 'tests.db')):
-        db.create_all()
+#with app.app_context():
+    #if not os.path.exists(os.path.join(basedir, 'tests.db')):
+        #db.create_all()
 
 @app.route('/create_db')
 def create_db():
