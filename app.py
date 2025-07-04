@@ -14,8 +14,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # Set up database path
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'tests.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -50,6 +49,11 @@ def load_user(user_id):
 with app.app_context():
     if not os.path.exists(os.path.join(basedir, 'tests.db')):
         db.create_all()
+
+@app.route('/create_db')
+def create_db():
+    db.create_all()
+    return 'Database tables created!'
 
 @app.route('/')
 @login_required
