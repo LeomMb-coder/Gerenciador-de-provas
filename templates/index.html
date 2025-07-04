@@ -1,51 +1,283 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8" />
     <title>Gerenciador de Provas da Escola</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+<style>
+    /* import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+/* color variables */
+:root {
+    --primary-green: #2DA44E;
+    --primary-dark: #24292F;
+    --primary-light: #ffffff;
+    --fade-light: #F6F8FA;
+    --border-color: rgb(141, 141, 141);
+    --danger-red: #d73a49;
+    --warning-yellow: #dbab09;
+}
+
+/* base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+p, a {
+    font-size: 1rem;
+}
+
+a {
+    color: var(--primary-green);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Flash messages */
+.alert {
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    position: relative;
+    font-size: 1rem;
+}
+
+.alert-success {
+    background-color: #daf5dc;
+    color: #2e7d32;
+    border: 1px solid #2da44e;
+}
+
+.alert-warning {
+    background-color: #fff4d6;
+    color: #dbab09;
+    border: 1px solid var(--warning-yellow);
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid var(--danger-red);
+}
+
+.alert-dismissible .btn-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: inherit;
+}
+
+/* User info */
+.user-info {
+    margin-bottom: 30px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.user-info a {
+    margin-left: 8px;
+}
+
+/* Add button */
+.btn-success {
+    background-color: var(--primary-green);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: var(--primary-light);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.2s ease;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+
+.btn-success:hover {
+    background-color: #24843b;
+}
+
+/* Cards grid */
+.tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background-color: var(--fade-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+}
+
+.card img {
+    width: 100%;
+    object-fit: cover;
+    height: 180px;
+}
+
+.card-body {
+    padding: 15px 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 5px;
+    color: var(--primary-dark);
+}
+
+.card-subtitle {
+    font-size: 0.9rem;
+    color: gray;
+    margin-bottom: 15px;
+}
+
+.card-text {
+    flex-grow: 1;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.card-small-text {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Card buttons */
+.card-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-warning {
+    background-color: #dbab09;
+    border: none;
+    color: var(--primary-light);
+    padding: 7px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-warning:hover {
+    background-color: #b38f05;
+}
+
+.btn-danger {
+    background-color: var(--danger-red);
+    border: none;
+    color: var(--primary-light);
+    padding: 7px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: #a2333f;
+}
+
+/* Responsive */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .card img {
+        height: 140px;
+    }
+}
+
+</style>
 <body>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="container mt-3">
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+            <div class="container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.style.display='none';">&times;</button>
+                    </div>
+                {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
-    
-        <p>Logado como {{ current_user.username }} | <a href="/logout">Logout</a></p>
-        <a href="/add" class="btn btn-success mb-3">Adicionar Nova Prova</a>
+
+    <div class="container">
+        <p class="user-info">Logado como {{ current_user.username }} | <a href="/logout">Logout</a></p>
+        <a href="/add" class="btn-success">Adicionar Nova Prova</a>
         <h1>Próximas Provas</h1>
-    
-    <div class="container mt-4">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for test in tests %}
-        <div class="col">
-            <div class="card h-100">
+
+        <div class="tests-grid mt-4">
+            {% for test in tests %}
+            <div class="card">
                 {% if test.image_url %}
-                <img src="{{ test.image_url }}" class="card-img-top" alt="Image">
+                <img src="{{ test.image_url }}" alt="Imagem da prova">
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ test.subject }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ test.date }}</h6>
+                    <h6 class="card-subtitle">{{ test.date }}</h6>
                     <p class="card-text">{{ test.description }}</p>
-                    <p class="card-text"><small class="text-muted">Adicionado por {{ test.author.username }}</small></p>
-                    <a href="/edit/{{ test.id }}" class="btn btn-warning me-2">Edit</a>
-                    <a href="/delete/{{ test.id }}" class="btn btn-danger">Delete</a>
+                    <p class="card-small-text">Adicionado por {{ test.author.username }}</p>
+                    <div class="card-buttons">
+                        <a href="/edit/{{ test.id }}" class="btn-warning">Editar</a>
+                        <a href="/delete/{{ test.id }}" class="btn-danger">Excluir</a>
+                    </div>
                 </div>
             </div>
+            {% else %}
+            <p>Nenhuma Prova</p>
+            {% endfor %}
         </div>
-        {% else %}
-        <p>Nenhuma Prova</p>
-        {% endfor %}
-    </div>
     </div>
 </body>
 </html>
