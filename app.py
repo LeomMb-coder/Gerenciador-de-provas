@@ -50,10 +50,10 @@ def load_user(user_id):
     #if not os.path.exists(os.path.join(basedir, 'tests.db')):
         #db.create_all()
 
-@app.route('/create_db')
-def create_db():
-    db.create_all()
-    return 'Database tables created!'
+#@app.route('/create_db')
+# def create_db():
+#    db.create_all()
+#    return 'Database tables created!'
 
 @app.route('/')
 @login_required
